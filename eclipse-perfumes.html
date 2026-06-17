@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eclipse Perfumes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --black2: #111111;
+    --black3: #1a1a1a;
+    --white: #f5f3ef;
+    --gold: #c9a96e;
+    --gold-dim: #8a6f42;
+    --pink: #d4789a;
+    --pink-light: #f0b8cc;
+    --pink-dim: #8a4060;
+    --gray: #3a3a3a;
+    --gray-light: #5a5a5a;
+    --text-muted: #7a7a7a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 3rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    transition: background 0.3s;
+  }
+  nav.scrolled { background: rgba(10,10,10,0.97); border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { font-style: italic; color: var(--gold); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+
+  .nav-filter {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(201,169,110,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 70% 30%, rgba(212,120,154,0.04) 0%, transparent 60%);
+  }
+
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 0.2em;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 3.5rem;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    border: 1px solid rgba(201,169,110,0.4);
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    transition: all 0.3s;
+  }
+  .hero-cta:hover {
+    background: rgba(201,169,110,0.08);
+    border-color: var(--gold);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.3;
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  .hero-scroll span { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; }
+  .hero-scroll-line { width: 1px; height: 40px; background: var(--white); }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+
+  /* FILTER */
+  .filter-section {
+    padding: 5rem 3rem 3rem;
+    text-align: center;
+  }
+  .filter-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .filter-tabs {
+    display: inline-flex;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+  .filter-tab {
+    padding: 0.75rem 2.5rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  .filter-tab:last-child { border-right: none; }
+  .filter-tab:hover { color: var(--white); background: rgba(255,255,255,0.03); }
+  .filter-tab.active { color: var(--black); background: var(--white); }
+  .filter-tab.active.women { color: var(--black); background: var(--pink-light); }
+
+  /* CATALOG */
+  .catalog {
+    padding: 2rem 3rem 6rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .catalog-section { margin-bottom: 5rem; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  .section-header-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    font-style: italic;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .section-title.women { color: var(--pink); }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5px;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .product-card {
+    background: var(--black);
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.25s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-card:hover { background: var(--black2); }
+  .product-card:hover .product-img-inner { transform: scale(1.04); }
+
+  .product-img {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    position: relative;
+    background: var(--black3);
+  }
+  .product-img-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+  }
+
+  .product-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .placeholder-bottle {
+    width: 60px;
+    opacity: 0.15;
+  }
+
+  .product-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.4);
+  }
+  .product-tag.women {
+    border-color: rgba(212,120,154,0.3);
+    color: var(--pink);
+  }
+
+  .product-info {
+    padding: 1.5rem 1.5rem 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-inspired {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+  .product-name.women { color: var(--pink-light); }
+
+  .product-brand {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  .product-size {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dim);
+  }
+
+  .product-action {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .product-card:hover .product-action { opacity: 1; }
+  .product-action svg { width: 14px; height: 14px; stroke: var(--white); fill: none; }
+  .product-action.women { border-color: rgba(212,120,154,0.3); }
+  .product-action.women svg { stroke: var(--pink); }
+
+  /* ABOUT */
+  .about {
+    padding: 6rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .about-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+  }
+  .about-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(245,243,239,0.7);
+  }
+  .about-text em { font-style: italic; color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: rgba(245,243,239,0.4);
+  }
+  .footer-copy {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+  }
+
+  /* HIDDEN STATE */
+  .catalog-section.hidden { display: none; }
+  .product-card.hidden { display: none; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .catalog { padding: 1.5rem 1rem 4rem; }
+    .filter-section { padding: 3rem 1rem 2rem; }
+    .filter-tab { padding: 0.65rem 1.2rem; font-size: 0.65rem; }
+    .about { padding: 4rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="nav-logo" href="#"><em>E</em>clipse <span style="font-family:'Jost';font-size:0.75rem;letter-spacing:0.2em;color:var(--text-muted)">PERFUMES</span></a>
+  <ul class="nav-links">
+    <li><a href="#catalog">Collection</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">Damascus · Luxury Fragrance</p>
+  <h1 class="hero-title"><em>Eclipse</em><br>Perfumes</h1>
+  <p class="hero-sub">Inspired by the world's finest fragrances</p>
+  <a href="#catalog" class="hero-cta">Explore Collection</a>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- FILTER -->
+<section class="filter-section" id="catalog">
+  <p class="filter-label">Filter by</p>
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterProducts('all', this)">All</button>
+    <button class="filter-tab" onclick="filterProducts('men', this)">Men</button>
+    <button class="filter-tab women" onclick="filterProducts('women', this)">Women</button>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<div class="catalog">
+
+  <!-- MEN -->
+  <div class="catalog-section" id="section-men">
+    <div class="section-header">
+      <div class="section-header-line"></div>
+      <span class="section-title">Pour Homme</span>
+      <div class="section-header-line"></div>
+    </div>
+    <div class="products-grid" id="grid-men">
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=400&q=80" alt="Stronger with You Absolutely">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Stronger With You Absolutely</h3>
+          <p class="product-brand">Giorgio Armani · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&q=80" alt="Hawas">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Hawas</h3>
+          <p class="product-brand">Rasasi Lattafa · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=400&q=80" alt="Khamra">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Khamra</h3>
+          <p class="product-brand">Lattafa · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1590736969596-4df1d7e9a423?w=400&q=80" alt="Le Male">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Le Male</h3>
+          <p class="product-brand">Jean Paul Gaultier · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1547887538-047f814d3679?w=400&q=80" alt="Lover">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Lover</h3>
+          <p class="product-brand">Jean Paul Gaultier · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1616949755610-8c9bbc08f138?w=400&q=80" alt="Blue de Chanel">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Bleu de Chanel</h3>
+          <p class="product-brand">Chanel · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&q=80" alt="Darej">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Darej</h3>
+          <p class="product-brand">Rasasi · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=400&q=80" alt="Baccarat Rouge">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Baccarat Rouge 540</h3>
+          <p class="product-brand">Maison Francis Kurkdjian · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=400&q=80&sat=-100" alt="Sauvage">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Sauvage</h3>
+          <p class="product-brand">Christian Dior · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&q=80&hue=200" alt="Silver Scent">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Silver Scent</h3>
+          <p class="product-brand">Jacques Bogart · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=400&q=80&hue=180" alt="Acqua di Gio">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Acqua di Giò</h3>
+          <p class="product-brand">Giorgio Armani · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1590736969596-4df1d7e9a423?w=400&q=80&hue=300" alt="212 VIP">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">212 VIP</h3>
+          <p class="product-brand">Carolina Herrera · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="men">
+        <div class="product-img">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1547887538-047f814d3679?w=400&q=80&hue=120" alt="Armani Code">
+          </div>
+          <span class="product-tag">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name">Armani Code</h3>
+          <p class="product-brand">Giorgio Armani · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WOMEN -->
+  <div class="catalog-section" id="section-women">
+    <div class="section-header">
+      <div class="section-header-line"></div>
+      <span class="section-title women">Pour Femme</span>
+      <div class="section-header-line"></div>
+    </div>
+    <div class="products-grid" id="grid-women">
+
+      <div class="product-card" data-gender="women">
+        <div class="product-img" style="background:linear-gradient(135deg,#1a0a0f,#2a1020)">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?w=400&q=80" alt="La Vie Est Belle">
+          </div>
+          <span class="product-tag women">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name women">La Vie Est Belle</h3>
+          <p class="product-brand">Lancôme · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action women">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="women">
+        <div class="product-img" style="background:linear-gradient(135deg,#1a0a0f,#2a1020)">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=400&q=80" alt="J'adore">
+          </div>
+          <span class="product-tag women">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name women">J'adore</h3>
+          <p class="product-brand">Christian Dior · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action women">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="women">
+        <div class="product-img" style="background:linear-gradient(135deg,#1a0a0f,#2a1020)">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=400&q=80" alt="Sì">
+          </div>
+          <span class="product-tag women">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name women">Sì</h3>
+          <p class="product-brand">Giorgio Armani · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action women">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="women">
+        <div class="product-img" style="background:linear-gradient(135deg,#1a0a0f,#2a1020)">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1588514912908-3b4c2a89e6ac?w=400&q=80" alt="Burberry Her">
+          </div>
+          <span class="product-tag women">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name women">Burberry Her</h3>
+          <p class="product-brand">Burberry · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action women">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="women">
+        <div class="product-img" style="background:linear-gradient(135deg,#1a0a0f,#2a1020)">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&q=80" alt="Black Opium">
+          </div>
+          <span class="product-tag women">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name women">Black Opium</h3>
+          <p class="product-brand">Yves Saint Laurent · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action women">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-gender="women">
+        <div class="product-img" style="background:linear-gradient(135deg,#1a0a0f,#2a1020)">
+          <div class="product-img-inner">
+            <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&q=80" alt="Eilish">
+          </div>
+          <span class="product-tag women">100 ml</span>
+        </div>
+        <div class="product-info">
+          <p class="product-inspired">Inspired by</p>
+          <h3 class="product-name women">Eilish</h3>
+          <p class="product-brand">Billie Eilish · Eclipse Edition</p>
+          <div class="product-footer">
+            <span class="product-size">EDP · 100ml</span>
+            <div class="product-action women">
+              <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <p class="about-eyebrow">Our Philosophy</p>
+  <p class="about-text">
+    Eclipse was born from a simple belief — that <em>luxury fragrance</em> should be within reach for everyone. Each scent in our collection is carefully crafted to capture the essence of the world's most iconic perfumes, <em>without compromise</em>.
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">Eclipse Perfumes</span>
+  <span class="footer-copy">Damascus · All rights reserved</span>
+</footer>
+
+<script>
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Filter
+  function filterProducts(gender, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    const menSection = document.getElementById('section-men');
+    const womenSection = document.getElementById('section-women');
+
+    if (gender === 'all') {
+      menSection.classList.remove('hidden');
+      womenSection.classList.remove('hidden');
+    } else if (gender === 'men') {
+      menSection.classList.remove('hidden');
+      womenSection.classList.add('hidden');
+    } else {
+      menSection.classList.add('hidden');
+      womenSection.classList.remove('hidden');
+    }
+  }
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.product-card').forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = `opacity 0.5s ease ${i * 0.04}s, transform 0.5s ease ${i * 0.04}s`;
+    observer.observe(card);
+  });
+</script>
+</body>
+</html>
