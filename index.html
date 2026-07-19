@@ -363,11 +363,8 @@
     footer { flex-direction: column; gap: 1rem; text-align: center; }
   }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  (function(){
-    emailjs.init({publicKey: "HuJC6-79cddQQzvBk"});
-  })();
+  // Web3Forms ready
 </script>
 </head>
 <body>
@@ -987,20 +984,27 @@ function submitOrder() {
     setTimeout(() => { document.getElementById('success-overlay').classList.add('open'); document.body.style.overflow='hidden'; }, 300);
   }
 
-  emailjs.send('service_fjzo0d7', 'template_y2sclft', {
-    customer_name: name,
-    phone: phone,
-    email: email || '—',
-    country: country,
-    city: city,
-    area: area || '—',
-    address: address,
-    items: itemsList,
-    total_items: totalQty,
-    total_price: '$' + totalPrice + ' USD',
-    payment: 'Cash on Delivery',
-    ordered_at: new Date().toLocaleString('en-GB', {timeZone:'Asia/Damascus'})
-  }).then(() => {
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      access_key: '76b04aec-8387-4418-93c9-b3c03cd91d3d',
+      subject: `🌙 New Order from ${name} — Eclipse Perfumes`,
+      from_name: 'Eclipse Perfumes',
+      customer_name: name,
+      phone: phone,
+      email: email || '—',
+      country: country,
+      city: city,
+      area: area || '—',
+      address: address,
+      items: itemsList,
+      total_items: totalQty,
+      total_price: '$' + totalPrice + ' USD',
+      payment: 'Cash on Delivery',
+      ordered_at: new Date().toLocaleString('en-GB', {timeZone:'Asia/Damascus'})
+    })
+  }).then(r => r.json()).then(() => {
     finishOrder();
   }).catch(() => {
     finishOrder();
