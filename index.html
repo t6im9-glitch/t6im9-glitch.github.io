@@ -388,10 +388,10 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <canvas class="hero-canvas" id="hero-canvas"></canvas>
-  <p class="hero-eyebrow">Born in Aleppo · Luxury Fragrance</p>
+  <p class="hero-eyebrow">Luxury Fragrance</p>
   <h1 class="hero-title"><em>Eclipse</em><br>Perfumes</h1>
   <p class="hero-sub">Inspired by the world's finest fragrances</p>
-  <a href="#catalog" class="hero-cta">Explore Collection</a>
+  <a href="#catalog" class="hero-cta" onclick="event.preventDefault();document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">Explore Collection</a>
 
 </section>
 
@@ -530,7 +530,7 @@
 </section>
 <footer>
   <span class="footer-logo">Eclipse Perfumes</span>
-  <span class="footer-copy">Born in Aleppo · All rights reserved</span>
+  <span class="footer-copy">© Eclipse Perfumes · All rights reserved</span>
 </footer>
 
 
@@ -1063,7 +1063,7 @@ function submitOrder() {
 
         <!-- Footer -->
         <tr><td style="padding:20px 32px;text-align:center;background:#0e0b0f">
-          <div style="font-size:10px;color:#555;letter-spacing:2px">ECLIPSE PERFUMES · Born in Aleppo</div>
+          <div style="font-size:10px;color:#555;letter-spacing:2px">ECLIPSE PERFUMES</div>
         </td></tr>
 
       </table>
