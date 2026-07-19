@@ -364,7 +364,11 @@
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init("HuJC6-79cddQQzvBk");</script>
+<script>
+  (function(){
+    emailjs.init({publicKey: "HuJC6-79cddQQzvBk"});
+  })();
+</script>
 </head>
 <body>
 
