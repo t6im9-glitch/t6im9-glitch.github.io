@@ -984,6 +984,94 @@ function submitOrder() {
     setTimeout(() => { document.getElementById('success-overlay').classList.add('open'); document.body.style.overflow='hidden'; }, 300);
   }
 
+  const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:30px 0">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:4px;overflow:hidden">
+        
+        <!-- Header -->
+        <tr><td style="background:#0e0b0f;padding:28px 32px;text-align:center">
+          <div style="font-family:Georgia,serif;font-size:22px;color:#d4b078;letter-spacing:4px">ECLIPSE</div>
+          <div style="font-size:10px;color:#888;letter-spacing:3px;margin-top:4px">PERFUMES</div>
+        </td></tr>
+
+        <!-- Title -->
+        <tr><td style="padding:28px 32px 8px;border-bottom:1px solid #f0f0f0">
+          <div style="font-size:18px;font-weight:bold;color:#1a1a1a">🌙 New Order Received</div>
+          <div style="font-size:12px;color:#888;margin-top:4px">${new Date().toLocaleString('en-GB', {timeZone:'Asia/Damascus'})}</div>
+        </td></tr>
+
+        <!-- Customer -->
+        <tr><td style="padding:20px 32px;border-bottom:1px solid #f0f0f0">
+          <div style="font-size:11px;font-weight:bold;color:#d4b078;letter-spacing:2px;margin-bottom:12px">CUSTOMER</div>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td style="padding:4px 0;font-size:13px;color:#555;width:100px">Name</td><td style="padding:4px 0;font-size:13px;color:#1a1a1a;font-weight:600">${name}</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:#555">Phone</td><td style="padding:4px 0;font-size:13px;color:#1a1a1a;font-weight:600">${phone}</td></tr>
+            ${email ? `<tr><td style="padding:4px 0;font-size:13px;color:#555">Email</td><td style="padding:4px 0;font-size:13px;color:#1a1a1a">${email}</td></tr>` : ''}
+          </table>
+        </td></tr>
+
+        <!-- Delivery -->
+        <tr><td style="padding:20px 32px;border-bottom:1px solid #f0f0f0">
+          <div style="font-size:11px;font-weight:bold;color:#d4b078;letter-spacing:2px;margin-bottom:12px">DELIVERY</div>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td style="padding:4px 0;font-size:13px;color:#555;width:100px">Country</td><td style="padding:4px 0;font-size:13px;color:#1a1a1a">${country}</td></tr>
+            <tr><td style="padding:4px 0;font-size:13px;color:#555">City</td><td style="padding:4px 0;font-size:13px;color:#1a1a1a">${city}</td></tr>
+            ${area ? `<tr><td style="padding:4px 0;font-size:13px;color:#555">Area</td><td style="padding:4px 0;font-size:13px;color:#1a1a1a">${area}</td></tr>` : ''}
+            <tr><td style="padding:4px 0;font-size:13px;color:#555">Address</td><td style="padding:4px 0;font-size:13px;color:#1a1a1a">${address}</td></tr>
+          </table>
+        </td></tr>
+
+        <!-- Items -->
+        <tr><td style="padding:20px 32px;border-bottom:1px solid #f0f0f0">
+          <div style="font-size:11px;font-weight:bold;color:#d4b078;letter-spacing:2px;margin-bottom:12px">ITEMS</div>
+          ${cart.map(i => `
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px">
+            <tr>
+              <td style="font-size:13px;color:#1a1a1a;font-weight:600">${i.name}</td>
+              <td style="font-size:13px;color:#1a1a1a;text-align:right;font-weight:600">$${i.price * i.qty}</td>
+            </tr>
+            <tr>
+              <td style="font-size:11px;color:#888">${i.brand} · EDP ${i.ml}ml · x${i.qty}</td>
+              <td></td>
+            </tr>
+          </table>`).join('<hr style="border:none;border-top:1px solid #f5f5f5;margin:6px 0">')}
+        </td></tr>
+
+        <!-- Total -->
+        <tr><td style="padding:20px 32px;background:#fafafa;border-bottom:1px solid #f0f0f0">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="font-size:13px;color:#555">Total Items</td>
+              <td style="font-size:13px;color:#1a1a1a;text-align:right">${totalQty}</td>
+            </tr>
+            <tr>
+              <td style="font-size:16px;font-weight:bold;color:#1a1a1a;padding-top:8px">Total</td>
+              <td style="font-size:16px;font-weight:bold;color:#d4b078;text-align:right;padding-top:8px">$${totalPrice} USD</td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Payment -->
+        <tr><td style="padding:16px 32px;background:#fffbf5">
+          <div style="font-size:12px;color:#d4b078">💵 Cash on Delivery — الدفع عند الاستلام</div>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="padding:20px 32px;text-align:center;background:#0e0b0f">
+          <div style="font-size:10px;color:#555;letter-spacing:2px">ECLIPSE PERFUMES · Born in Aleppo</div>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
   fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -991,18 +1079,29 @@ function submitOrder() {
       access_key: '76b04aec-8387-4418-93c9-b3c03cd91d3d',
       subject: `🌙 New Order from ${name} — Eclipse Perfumes`,
       from_name: 'Eclipse Perfumes',
-      customer_name: name,
-      phone: phone,
-      email: email || '—',
-      country: country,
-      city: city,
-      area: area || '—',
-      address: address,
-      items: itemsList,
-      total_items: totalQty,
-      total_price: '$' + totalPrice + ' USD',
-      payment: 'Cash on Delivery',
-      ordered_at: new Date().toLocaleString('en-GB', {timeZone:'Asia/Damascus'})
+      message: `
+🌙 NEW ORDER — ECLIPSE PERFUMES
+================================
+
+👤 CUSTOMER
+Name: ${name}
+Phone: ${phone}
+${email ? 'Email: ' + email : ''}
+
+📦 DELIVERY
+Country: ${country}
+City: ${city}
+${area ? 'Area: ' + area : ''}
+Address: ${address}
+
+🛍 ITEMS
+${cart.map(i => `• ${i.name} (${i.brand}) — ${i.ml}ml x${i.qty} = $${i.price * i.qty}`).join('\n')}
+
+💰 TOTAL: $${totalPrice} USD (${totalQty} items)
+💵 Payment: Cash on Delivery
+
+🕐 Date: ${new Date().toLocaleString('en-GB', {timeZone:'Asia/Damascus'})}
+      `.trim()
     })
   }).then(r => r.json()).then(() => {
     finishOrder();
